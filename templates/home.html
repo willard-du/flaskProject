@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Integration</title>
+</head>
+<body>
+
+<h1>Du Dunwei   76004</h1>
+
+<h2>Get Popular Words</h2>
+<form id="popularWordsForm">
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" placeholder="Enter city">
+    <br>
+    <label for="limit">Limit:</label>
+    <input type="number" id="limit" name="limit" placeholder="Enter limit" min="1" value="20">
+    <br>
+    <button type="button" onclick="getPopularWords()">Get Popular Words</button>
+</form>
+<div id="popularWordsResult"></div>
+
+<h2>Get Popular Words Based on Population</h2>
+<form id="popularWordsPopulationForm">
+    <label for="cityPopulation">City:</label>
+    <input type="text" id="cityPopulation" name="cityPopulation" placeholder="Enter city">
+    <br>
+    <label for="limitPopulation">Limit:</label>
+    <input type="number" id="limitPopulation" name="limitPopulation" placeholder="Enter limit" min="1" value="20">
+    <br>
+    <button type="button" onclick="getPopularWordsPopulation()">Get Popular Words Based on Population</button>
+</form>
+<div id="popularWordsPopulationResult"></div>
+
+<h2>Substitute Words</h2>
+<form id="substituteWordsForm">
+    <label for="wordToReplace">Word to Replace:</label>
+    <input type="text" id="wordToReplace" name="wordToReplace" placeholder="Enter word to replace">
+    <br>
+    <label for="substituteWord">Substitute Word:</label>
+    <input type="text" id="substituteWord" name="substituteWord" placeholder="Enter substitute word">
+    <br>
+    <button type="button" onclick="substituteWords()">Substitute Words</button>
+</form>
+<div id="substituteWordsResult"></div>
+
+<script>
+    function getPopularWords() {
+        // 获取表单输入
+        var city = document.getElementById("city").value;
+        var limit = document.getElementById("limit").value;
+
+        // 构建URL
+        var url = "/popular_words?city=" + encodeURIComponent(city) + "&limit=" + encodeURIComponent(limit);
+
+        // 发送GET请求
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("popularWordsResult").innerHTML = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function getPopularWordsPopulation() {
+        // 获取表单输入
+        var cityPopulation = document.getElementById("cityPopulation").value;
+        var limitPopulation = document.getElementById("limitPopulation").value;
+
+        // 构建URL
+        var url = "/popular_words_1?city=" + encodeURIComponent(cityPopulation) + "&limit=" + encodeURIComponent(limitPopulation);
+
+        // 发送GET请求
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("popularWordsPopulationResult").innerHTML = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function substituteWords() {
+        // 获取表单输入
+        var wordToReplace = document.getElementById("wordToReplace").value;
+        var substituteWord = document.getElementById("substituteWord").value;
+
+        // 构建POST请求的参数
+        var data = {
+            "word": wordToReplace,
+            "substitute": substituteWord
+        };
+
+        // 发送POST请求
+        fetch("/substitute_words", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("substituteWordsResult").innerHTML = JSON.stringify(data);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+</script>
+
+</body>
+</html>

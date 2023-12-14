@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/d97a6268-e996-4718-9480-2eda377566e2/resourceGroups/appsvc_linux_centralus/providers/Microsoft.Web/sites/dudunweitask2",
+    "appService.deploySubpath": "."
+}

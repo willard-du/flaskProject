@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Words API</title>
+</head>
+<body>
+    <h1>Dunwei Du 76004</h1>
+
+    <h2>Popular Words</h2>
+    <form id="popular-words-form">
+        <label for="popular-city">City:</label>
+        <input type="text" id="popular-city" name="city">
+        <label for="popular-limit">Limit:</label>
+        <input type="number" id="popular-limit" name="limit" value="10">
+        <button type="button" onclick="getPopularWords()">Get Popular Words (Count)</button>
+        <button type="button" onclick="getPopularWordsPopulation()">Get Popular Words (Population)</button>
+    </form>
+
+    <div id="popular-words-result">
+        <!-- Results for Popular Words will be displayed here -->
+    </div>
+
+    <h2>Substitute Words</h2>
+    <form id="substitute-words-form">
+        <label for="substitute-word">Word to Replace:</label>
+        <input type="text" id="substitute-word" name="word">
+        <label for="new-word">New Word:</label>
+        <input type="text" id="new-word" name="substitute">
+        <button type="button" onclick="substituteWords()">Substitute Words</button>
+    </form>
+
+    <div id="substitute-words-result">
+        <!-- Results for Substitute Words will be displayed here -->
+    </div>
+
+    <script>
+        function getPopularWords() {
+            var city = document.getElementById('popular-city').value;
+            var limit = document.getElementById('popular-limit').value;
+
+            fetch(`/popular_words_count?city=${city}&limit=${limit}`)
+                .then(response => response.json())
+                .then(data => displayResults(data, 'popular-words-result'))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function getPopularWordsPopulation() {
+            var city = document.getElementById('popular-city').value;
+            var limit = document.getElementById('popular-limit').value;
+
+            fetch(`/popular_words_population?city=${city}&limit=${limit}`)
+                .then(response => response.json())
+                .then(data => displayResults(data, 'popular-words-result'))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function substituteWords() {
+            var wordToReplace = document.getElementById('substitute-word').value;
+            var newWord = document.getElementById('new-word').value;
+
+            fetch('/substitute_words', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ "word": wordToReplace, "substitute": newWord })
+            })
+                .then(response => response.json())
+                .then(data => displayResults(data, 'substitute-words-result'))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function displayResults(data, resultDivId) {
+            var resultDiv = document.getElementById(resultDivId);
+            resultDiv.innerHTML = '';
+
+            data.forEach(item => {
+                var itemDiv = document.createElement('div');
+                itemDiv.textContent = `Term: ${item.term}, Popularity: ${item.popularity}`;
+                resultDiv.appendChild(itemDiv);
+            });
+        }
+    </script>
+</body>
+</html>
